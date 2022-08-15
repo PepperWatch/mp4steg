@@ -1,0 +1,28 @@
+{
+  "name": "mp4steg",
+  "main": "mp4steg.js",
+  "version": "1.0.1",
+  "description": "",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "crypto-js": "^4.0.0",
+    "debug": "^4.3.1",
+    "long": "^4.0.0",
+    "tmp": "^0.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^7.16.0",
+    "grunt": "^1.3.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "grunt-env": "^1.0.1",
+    "grunt-tape": "^0.1.0",
+    "tap": "^14.11.0"
+  },
+  "scripts": {
+    "test": "tap test/*.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
