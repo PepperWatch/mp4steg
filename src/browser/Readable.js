@@ -30,24 +30,28 @@ class Readable {
 			await this.prepare();
 		}
 
-		// if (this._file instanceof File) {
-			return await new Promise((res, rej)=>{
-		    	const fileReader = new FileReader();
+		if (this._file.getSlice) {
+			return await this._file.getSlice(offset, length);
+		} else {
+			// if (this._file instanceof File) {
+				return await new Promise((res, rej)=>{
+			    	const fileReader = new FileReader();
 
-				fileReader.onloadend = function(evt) {
-					if (evt.target.readyState == FileReader.DONE) { // DONE == 2
-						res(new Uint8Array(fileReader.result));
-					}
-				};
+					fileReader.onloadend = function(evt) {
+						if (evt.target.readyState == FileReader.DONE) { // DONE == 2
+							res(new Uint8Array(fileReader.result));
+						}
+					};
 
-				const blob = this._file.slice(offset, offset + length);
-				fileReader.readAsArrayBuffer(blob);
-			});
-		// } else {
-		// 	// is this a blob?
-		// 	console.error('THIS IS BLOB!!!');
-		// 	const sliced = this._file.slice(offset, offset + length);
-		// }
+					const blob = this._file.slice(offset, offset + length);
+					fileReader.readAsArrayBuffer(blob);
+				});
+			// } else {
+			// 	// is this a blob?
+			// 	console.error('THIS IS BLOB!!!');
+			// 	const sliced = this._file.slice(offset, offset + length);
+			// }
+		}
 	}
 
 	async size() {

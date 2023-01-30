@@ -30,7 +30,7 @@ class AES {
 			this.genIV();
 		}
 
-		console.error('AES', this._key, this._password, this._iv);
+		// console.error('AES', this._key, this._password, this._iv);
 	}
 
 	getCryptoParams() {
