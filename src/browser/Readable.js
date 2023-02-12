@@ -2,8 +2,6 @@
 
 class Readable {
 	constructor(params = {}) {
-		console.error(params);
-
 		this._prepared = false;
 		this._file = params.file;
 		this._size = 0;

@@ -11,7 +11,6 @@ const Writable = require('./'+(isNode ? 'node' : 'browser')+'/Writable.js');
 
 class EmbedBinary {
 	constructor(params = {}) {
-			console.error(params);
 		if (params.readable) {
 			this._readable = params.readable;
 		} else if (params.filename && !params.file) {
