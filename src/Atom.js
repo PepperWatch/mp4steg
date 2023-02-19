@@ -33,6 +33,15 @@ class Atom {
 		return ret;
 	}
 
+	async unpackFromOffset(offset, length, fmt) {
+		try {
+			const data = await this.readable.getSlice(this.start + offset, length);
+			return Pack.unpack(fmt, data);
+		} catch(e) {
+			return [];
+		}
+	}
+
 	isVideo() {
 		const vmhdAtoms = this.findAtoms(null, 'vmhd');
 		if (vmhdAtoms && vmhdAtoms.length) {
