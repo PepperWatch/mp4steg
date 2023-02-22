@@ -332,7 +332,7 @@ class MP4 {
 				this._atoms.push(atom);
 			}
 
-			if (["moov","trak","mdia","minf","stbl"].indexOf(atomType) != -1) {
+			if (["moov","trak","mdia","minf","stbl","edts","udta"].indexOf(atomType) != -1) {
 				// parse deeper
 				await this.parseAtoms(offset + atomHeaderSize, offset + atomSize, atom);
 			}
