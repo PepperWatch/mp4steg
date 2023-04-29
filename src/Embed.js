@@ -73,10 +73,8 @@ class Embed {
 			const fileRecord = {
 				filename: this.basename(fileEntity.filename),
 				size: size,
-				test2: '1',
 			};
 			if (fileEntity.meta) {
-				fileRecord.test2 = '2';
 				fileRecord.meta = fileEntity.meta;
 			}
 

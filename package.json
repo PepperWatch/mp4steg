@@ -1,7 +1,7 @@
 {
   "name": "mp4steg",
   "main": "mp4steg.js",
-  "version": "1.0.6",
+  "version": "1.0.12",
   "description": "",
   "directories": {
     "test": "test"

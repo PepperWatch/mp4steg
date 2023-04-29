@@ -67,6 +67,76 @@ class MP4 {
 		await this._embed.addFile(params);
 	}
 
+	/**
+	 * Get expected size of result MP4 container without actually doing encoding
+	 * @return {Number} in bytes
+	 */
+	async getExpectedSize() {
+		let expectedSize = 0;
+
+		const ftyp = this.findAtom('ftyp');
+		const mdat = this.findAtom('mdat');
+		const moov = this.findAtom('moov');
+
+		if (!ftyp || !mdat || !moov) {
+			throw new Error('ftyp, mdat and moov atoms required');
+		}
+
+		const extendOffset = this._embed ? ( await this._embed.getExpectedSize() ) : 0;//  toAppedSize + embedHeaderSize;
+		let mdatOffset = 0;
+		let mdatNewSize = mdat.size - mdat.header_size;
+
+		// await ftyp.write(writable);
+		mdatOffset += ftyp.size;
+		expectedSize += ftyp.size;
+//
+		let tempH = mdat.header_size;
+		let tempL = mdat.size;
+
+		if (mdatNewSize <= constants.MAX_INT32) {
+			let freeAtom = new Atom({
+				name: 'free',
+				start: null,
+				size: 8,
+				header_size: 8,
+				mother: null,
+			});
+			expectedSize += freeAtom.size;
+			// await freeAtom.write(writable);
+			mdat.size += extendOffset;
+			// await mdat.writeHeader(writable);
+
+			expectedSize += mdat.header_size;
+
+			mdatOffset += 8;
+			mdatOffset += 8;
+		} else {
+			mdat.size += extendOffset;
+			mdat.header_size = 16;
+			// await mdat.writeHeader(writable);
+
+			expectedSize += mdat.header_size;
+
+			mdatOffset += 16;
+		}
+
+		mdat.header_size = tempH;
+		mdat.size = tempL;
+
+		if (this._embed) {
+			const embedSize = await this._embed.getExpectedSize();
+			expectedSize += embedSize;
+		}
+
+		expectedSize += (mdat.size - mdat.header_size);
+
+		const shiftOffsets = extendOffset + (mdatOffset - this._initialMdatStart);
+		await this.adjustSampleOffsets(shiftOffsets);
+
+		expectedSize += moov.size;
+
+		return expectedSize;
+	}
 
 	async adjustSampleOffsets(offset) {
 		const sampleAtoms = this.findAtoms(null, 'stco').concat( this.findAtoms(null, 'co64') ); // both 32 and 64 bits offsets
